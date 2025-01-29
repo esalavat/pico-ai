@@ -36,6 +36,7 @@ function pinit()
 	p={
 		x=64,
 		y=64,
+		speed=2,
 		anims={
 			{
 				action="run",
@@ -79,18 +80,64 @@ function pinit()
 end
 
 function pupdate()
+	local dx, dy = 0, 0
+	
+	--update direction
+	if btn(⬅️) then dx-=1 end
+	if btn(➡️) then dx+=1 end
+	if btn(⬆️) then dy-=1 end
+	if btn(⬇️) then dy+=1 end
+
+	-- normalize diagonal movement
+	if dx ~= 0 and dy ~= 0 then
+		dx *= 0.7071
+		dy *= 0.7071
+	end
+	
+	--apply movement
+	p.x += dx * p.speed
+	p.y += dy * p.speed
+	
+	--update moving flag
+	local moving=false
+	if dx~=0 or dy~=0 then
+		moving=true
+	end
+	
+	--update state
+	if(moving) then 
+		p.c_action="run"
+	else
+	 p.c_action="stand"
+	end
+
+	--reset time if we're switching animations	
+	if p.p_action~=p.c_action then
+		p.c_time=0
+	end
+
+	--update sprite frame
 	local anim=find(p.anims,"action",p.c_action)
 	if p.c_time%anim.speed==0 then
 		p.c_frame=(p.c_frame%#anim.frames)+1
 		p.c_time=0
 	end
+	
 	p.c_time+=1
+	p.p_action=p.c_action --save previous action
+	
 	return true
 end
 
 function pdraw()
+	printh("c_action: "..p.c_action)
+	printh("c_frame: "..p.c_frame)
+	
 	local anim=find(p.anims,"action",p.c_action)
 	local frame=anim.frames[p.c_frame]
+	
+	printh(frame.f.." "..anim.action)
+	
 	palt(0, false)  -- ensure color 0 is transparent (default behavior)
 	palt(11, true)
 	spr(frame.f,p.x,p.y,2,2,frame.fl,false,5)
