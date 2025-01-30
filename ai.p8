@@ -39,7 +39,7 @@ function pinit()
 		speed=2,
 		anims={
 			{
-				action="run",
+				action="run_s",
 				frames={
 					{
 						f=4,
@@ -56,9 +56,62 @@ function pinit()
 					}
 				},
 				speed=2
-			},
-			{
-				action="stand",
+			},{
+				action="run_n",
+				frames={
+					{
+						f=38,
+					 fl=false
+					},{
+						f=40,
+						fl=false
+					},{
+						f=38,
+						fl=true
+					},{
+						f=40,
+						fl=true
+					}
+				},
+				speed=2
+			},{
+				action="run_e",
+				frames={
+					{
+						f=12,
+					 fl=false
+					},{
+						f=14,
+						fl=false
+					},{
+						f=42,
+						fl=false
+					},{
+						f=44,
+						fl=false
+					}
+				},
+				speed=2
+			},{
+				action="run_w",
+				frames={
+					{
+						f=12,
+					 fl=true
+					},{
+						f=14,
+						fl=true
+					},{
+						f=42,
+						fl=true
+					},{
+						f=44,
+						fl=true
+					}
+				},
+				speed=2
+			},{
+				action="stand_s",
 				frames={
 					{
 						f=0,
@@ -69,11 +122,48 @@ function pinit()
 					}
 				},
 				speed=20
+			},{
+				action="stand_n",
+				frames={
+					{
+						f=34,
+						fl=false
+					},{
+					 f=36,
+					 fl=false
+					}
+				},
+				speed=20
+			},{
+				action="stand_e",
+				frames={
+					{
+						f=8,
+						fl=false
+					},{
+					 f=10,
+					 fl=false
+					}
+				},
+				speed=20
+			},{
+				action="stand_w",
+				frames={
+					{
+						f=8,
+						fl=true
+					},{
+					 f=10,
+					 fl=true
+					}
+				},
+				speed=20
 			}
 		},
-		c_action="run",
+		c_action="stand_s",
 		c_frame=1,
 		c_time=0,
+		l_dir="s",
 		update=pupdate,
 		draw=pdraw
 	}
@@ -98,17 +188,30 @@ function pupdate()
 	p.x += dx * p.speed
 	p.y += dy * p.speed
 	
-	--update moving flag
-	local moving=false
-	if dx~=0 or dy~=0 then
-		moving=true
+	--update direction
+	local dirx,diry
+	if dx>0 then
+		dirx="e"
+	elseif dx<0 then
+	 dirx="w"
+	else
+	 dirx=nil
+	end
+	
+	if dy>0 then
+	 diry="s"
+	elseif dy<0 then
+	 diry="n"
+	else
+	 diry=nil
 	end
 	
 	--update state
-	if(moving) then 
-		p.c_action="run"
-	else
-	 p.c_action="stand"
+	if dirx==nil and diry==nil then 
+		p.c_action="stand_"..p.l_dir
+	else 
+	 p.l_dir=(diry or dirx)
+	 p.c_action="run_"..p.l_dir
 	end
 
 	--reset time if we're switching animations	
@@ -153,30 +256,38 @@ function find(obj,p,val)
 	end
 end
 __gfx__
-bbbbbbbbbbbbbbbbbbbbb666666bbbbbbbbbbbbbbbbbbbbbbbbbb666666bbbbb0000000000000000000000000000000000000000000000000000000000000000
-bbbbb666666bbbbbbbbb66666666bbbbbbbbb666666bbbbbbbbb66666666bbbb0000000000000000000000000000000000000000000000000000000000000000
-bbbb66666666bbbbbbbbdccccccdbbbbbbbb66666666bbbbbbbbdccccccdbbbb0000000000000000000000000000000000000000000000000000000000000000
-bbbbdccccccdbbbbbbbbdccccccdbbbbbbbbdccccccdbbbbbbbbdccccccdbbbb0000000000000000000000000000000000000000000000000000000000000000
-bbbbdccccccdbbbbbbbbddddddddbbbbbbbbdccccccdbbbbbbbbddddddddbbbb0000000000000000000000000000000000000000000000000000000000000000
-bbbbddddddddbbbbbbbbddddddddbbbbbbbbddddddddbbbbbbbbddddddddbbbb0000000000000000000000000000000000000000000000000000000000000000
-bbbbddddddddbbbbbbbbbddddddbbbbbbbbbddddddddbbbbbbbbbddddddbbbbb0000000000000000000000000000000000000000000000000000000000000000
-bbbbbddddddbbbbbbb66bbbbbbbb66bbbbbbbddddddbbbbbbbbbbbbbbbbbbbbb0000000000000000000000000000000000000000000000000000000000000000
-bb66bbbbbbbb66bbb66dbbbbbbbbd66bbb66bbbbbbbb66bbbb66bbbbbbbb66bb0000000000000000000000000000000000000000000000000000000000000000
-b66dbbb66bbbd66bb66bbbb66bbbb66bbb66bbb66bbbd66bbb66bbb66bbbd66b0000000000000000000000000000000000000000000000000000000000000000
-b66bbbbddbbbb66bbddbbbbddbbbbddbbb66bbbddbbbb66bbb66bbbddbbbb66b0000000000000000000000000000000000000000000000000000000000000000
-bddbbbdbbdbbbddbbbbbbbdbbdbbbbbbbbddbbdbbdbbbddbbbddbbdbbdbbbddb0000000000000000000000000000000000000000000000000000000000000000
-bbbb06d00d60bbbbbbbb06d00d60bbbbbbbb06d00dd6bbbbbbbb06d00d60bbbb0000000000000000000000000000000000000000000000000000000000000000
-bbb06d0000d60bbbbbb06d0000d60bbbbbb06d0000dd6bbbbbb06d0000d60bbb0000000000000000000000000000000000000000000000000000000000000000
-bbb6dd0000dd6bbbbbb6dd0000dd6bbbbbb6dd000000bbbbbbb6dd0000dd6bbb0000000000000000000000000000000000000000000000000000000000000000
-bbbbb000000bbbbbbbbbb000000bbbbbbbbbb000000bbbbbbbbbb000000bbbbb0000000000000000000000000000000000000000000000000000000000000000
-33333333333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-333333333a3333a30000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-33d33d33333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-33333333333003330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-33333333333003330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-33d33d33333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-333333333a3333a30000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-33333333333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+bbbbbbbbbbbbbbbbbbbbb666666bbbbbbbbbbbbbbbbbbbbbbbbbb666666bbbbbbbbbbbbbbbbbbbbbbbbbbb66666bbbbbbbbbbbbbbbbbbbbbbbbbbb66666bbbbb
+bbbbb666666bbbbbbbbb66666666bbbbbbbbb666666bbbbbbbbb66666666bbbbbbbbbb66666bbbbbbbbbb6666666bbbbbbbbbb66666bbbbbbbbbb6666666bbbb
+bbbb66666666bbbbbbbbdccccccdbbbbbbbb66666666bbbbbbbbdccccccdbbbbbbbbb6666666bbbbbbbbbdddddccbbbbbbbbb6666666bbbbbbbbbdddddccbbbb
+bbbbdccccccdbbbbbbbbdccccccdbbbbbbbbdccccccdbbbbbbbbdccccccdbbbbbbbbbdddddccbbbbbbbbbdddddccbbbbbbbbbdddddccbbbbbbbbbdddddccbbbb
+bbbbdccccccdbbbbbbbbddddddddbbbbbbbbdccccccdbbbbbbbbddddddddbbbbbbbbbdddddccbbbbbbbbbdddddddbbbbbbbbbdddddccbbbbbbbbbdddddddbbbb
+bbbbddddddddbbbbbbbbddddddddbbbbbbbbddddddddbbbbbbbbddddddddbbbbbbbbbdddddddbbbbbbbbbdddddddbbbbbbbbbdddddddbbbbbbbbbdddddddbbbb
+bbbbddddddddbbbbbbbbbddddddbbbbbbbbbddddddddbbbbbbbbbddddddbbbbbbbbbbdddddddbbbbbbbbbbdddddbbbbbbbbbbdddddddbbbbbbbbbbdddddbbbbb
+bbbbbddddddbbbbbbb66bbbbbbbb66bbbbbbbddddddbbbbbbbbbbbbbbbbbbbbbbbbbbbdddddbbbbbbbbbbbbbbbbbbbbbbbbbbbdddddbbbbbbbbbbbbbbbbbbbbb
+bb66bbbbbbbb66bbb66dbbbbbbbbd66bbb66bbbbbbbb66bbbb66bbbbbbbb66bbbbbbbbbbbbbbbbbbbbbbbbbbbb6bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+b66dbbb66bbbd66bb66bbbb66bbbb66bbb66bbb66bbbd66bbb66bbb66bbbd66bbbbbbbb66b6bbbbbbbbbbbb66bddbbbbbbbbb6b66b66bbbbbbbbb6b66b66bbbb
+b66bbbbddbbbb66bbddbbbbddbbbbddbbb66bbbddbbbb66bbb66bbbddbbbb66bbbbbbbbddbddbbbbbbbbbbbddbddbbbbbbbb6dbddbbd6bbbbbbb6dbddbbd6bbb
+bddbbbdbbdbbbddbbbbbbbdbbdbbbbbbbbddbbdbbdbbbddbbbddbbdbbdbbbddbbbbbbbbddbddbbbbbbbbbbbddbbbbbbbbbbbddbdddbddbbbbbbbddbddbbddbbb
+bbbb06d00d60bbbbbbbb06d00d60bbbbbbbb06d00dd6bbbbbbbb06d00d60bbbbbbbbbb0dd00bbbbbbbbbbb0dd00bbbbbbbbbbb6ddd6bbbbbbbbbbb0dd00bbbbb
+bbb06d0000d60bbbbbb06d0000d60bbbbbb06d0000dd6bbbbbb06d0000d60bbbbbbbb00dd600bbbbbbbbb00dd600bbbbbbbbb0d60dd6bbbbbbbbb00dd600bbbb
+bbb6dd0000dd6bbbbbb6dd0000dd6bbbbbb6dd000000bbbbbbb6dd0000dd6bbbbbbbb000dd60bbbbbbbbb000dd60bbbbbbbbb0d60000bbbbbbbbb000dd60bbbb
+bbbbb000000bbbbbbbbbb000000bbbbbbbbbb000000bbbbbbbbbb000000bbbbbbbbbbb00000bbbbbbbbbbb00000bbbbbbbbbbb00000bbbbbbbbbbb00000bbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb666666bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb0000000000000000
+bbbbbbbbbbabbabbbbbbb666666bbbbbbbbb66666666bbbbbbbbb666666bbbbbbbbbb666666bbbbbbbbbbb66666bbbbbbbbbbb66666bbbbb0000000000000000
+bbdbbdbbbbb00bbbbbbb66666666bbbbbbbbd666666dbbbbbbbb66666666bbbbbbbb66666666bbbbbbbbb6666666bbbbbbbbb6666666bbbb0000000000000000
+bbbbbbbbbba00bbbbbbbd666666dbbbbbbbbddddddddbbbbbbbbd666666dbbbbbbbbd666666dbbbbbbbbbdddddccbbbbbbbbbdddddccbbbb0000000000000000
+bbbbbbbbbbb00abbbbbbddddddddbbbbbbbbddddddddbbbbbbbbddddddddbbbbbbbbddddddddbbbbbbbbbdddddccbbbbbbbbbdddddccbbbb0000000000000000
+bbdbbdbbbbb00bbbbbbbddddddddbbbbbbbbddddddddbbbbbbbbddddddddbbbbbbbbddddddddbbbbbbbbbdddddddbbbbbbbbbdddddddbbbb0000000000000000
+bbbbbbbbbbabbabbbbbbddddddddbbbbbbbbbddddddbbbbbbbbbddddddddbbbbbbbbddddddddbbbbbbbbbdddddddbbbbbbbbbdddddddbbbb0000000000000000
+3333333333333333bbbbbddddddbbbbbbb66bbbbbbbb66bbbbbbbddddddbbbbbbbbbbddddddbbbbbbbbbbbdddddbbbbbbbbbbbdddddbbbbb0000000000000000
+bbbbbbbbbbbbbbbbbb66bbbbbbbb66bbb6ddbbbbbbbbdd6bbb66bbbbbbbb66bbbb66bbbbbbbb66bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb0000000000000000
+bbbbbbbbbbbbbbbbb6ddbbbddbbbdd6bbddbbbbddbbbbddbbbddbbbddbbbdd6bbbddbbbddbbbdd6bbbbbb6b66b6bbbbbbbbbb6b66b6bbbbb0000000000000000
+bbbbbbbbbbbbbbbbbddbbbbddbbbbddbbddbbbbddbbbbddbbbddbbbddbbbbddbbbddbbbddbbbbddbbbbb6dbddbd6bbbbbbbb6dbddbd6bbbb0000000000000000
+bbbbbbbbbbbbbbbbbddbbbdbbdbbbddbbbbbbbdbbdbbbbbbbbddbbdbbdbbbddbbbddbbdbbdbbbddbbbbbddbdd6ddbbbbbbbbddbddbddbbbb0000000000000000
+bbbbbbbbbbbbbbbbbbbb06d00d60bbbbbbbb06d00d60bbbbbbbb06d00dd6bbbbbbbb06d00dd6bbbbbbbbbb0ddd6bbbbbbbbbbb0dd00bbbbb0000000000000000
+bbbbbbbbbbbbbbbbbbb06d0000d60bbbbbb06d0000d60bbbbbb06d0000dddbbbbbb06d0000dddbbbbbbbb0dd0dd0bbbbbbbbb00dd600bbbb0000000000000000
+bbbbbbbbbbbbbbbbbbbddd0000dddbbbbbbddd0000dddbbbbbbddd000000bbbbbbbddd000000bbbbbbbbb0dd6000bbbbbbbbb000dd60bbbb0000000000000000
+3333333333333333bbbbb000000bbbbbbbbbb000000bbbbbbbbbb000000bbbbbbbbbb000000bbbbbbbbbbb00000bbbbbbbbbbb00000bbbbb0000000000000000
 __map__
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
